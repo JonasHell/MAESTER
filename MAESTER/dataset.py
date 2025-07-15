@@ -165,3 +165,20 @@ class BetaSegDataset2D(torch.utils.data.dataset.Dataset):
             sample = sample.squeeze(0).permute((2, 0, 1))
 
         return self.aug(sample)
+
+
+@register_plugin("dataset", "MyBetaSegDataset2D")
+class MyBetaSegDataset2D(BetaSegDataset2D):
+    def sample_cord(self, data_idx, axis):
+        data = self.data_list[data_idx]  # get dataset
+        _, d_z, d_x, d_y = data.shape
+        # z axis
+        x_sample = torch.randint(low=0, high=int(d_x - self.vol_size - 1), size=(1,))
+        y_sample = torch.randint(low=0, high=int(d_y - self.vol_size - 1), size=(1,))
+        z_sample = torch.randint(low=0, high=int(d_z), size=(1,))
+        sample = data[0][
+            z_sample,
+            x_sample : x_sample + self.vol_size,
+            y_sample : y_sample + self.vol_size,
+        ].unsqueeze(0)
+        sample = sample.squeeze(0)
