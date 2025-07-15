@@ -16,7 +16,8 @@ MODEL:
 DATASET:
   name: "MyBetaSegDataset2D"
   path_list:
-    - "/mnt/embl/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor"
+    # - "/mnt/embl/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor"
+    - "/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor"
   pad: 4
   aug: "betaaug2D"
   num_workers: 2
