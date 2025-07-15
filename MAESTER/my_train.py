@@ -10,6 +10,7 @@ from model import *
 from pretrain_engine import set_deterministic
 from torch.utils.data import DataLoader
 from torch.utils.data.distributed import DistributedSampler
+from torch.utils.tensorboard import SummaryWriter
 from utils import get_plugin, read_yaml, save_checkpoint
 
 parser = argparse.ArgumentParser(description="MAESTER Training")
@@ -19,6 +20,7 @@ parser.add_argument("--model_config_name", default="deafult.yaml", type=str)
 # parser.add_argument("--world_size", default=2, type=int, help="")
 # parser.add_argument("--init_method", default="tcp://127.0.0.1:56079", type=str, help="")
 parser.add_argument("--logdir", default="./checkpoints", type=str, help="log directory")
+parser.add_argument("--log_dir", type=str, help="log directory")
 
 print("Starting...", flush=True)
 args = parser.parse_args()
@@ -40,8 +42,8 @@ print("model_config:", cfg, flush=True)
 # print(f"From Rank: {rank}, ==> Process group ready!", flush=True)
 # print(f"From Rank: {rank}, ==> Building model..")
 print(f"From Rank: {0}, ==> Building model..")
-# model = get_plugin("model", cfg["MODEL"]["name"])(cfg["MODEL"]).cuda()
-model = get_plugin("model", cfg["MODEL"]["name"])(cfg["MODEL"])
+model = get_plugin("model", cfg["MODEL"]["name"])(cfg["MODEL"]).cuda()
+# model = get_plugin("model", cfg["MODEL"]["name"])(cfg["MODEL"])
 
 # model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[current_device])
 model.embed_dim = cfg["MODEL"]["embed_dim"]
@@ -78,13 +80,17 @@ optimizer = get_plugin("optim", cfg["OPTIM"]["name"])(model, cfg["OPTIM"])
 print(f"From Rank: {0}, ==> Data ready!")
 engine_func = get_plugin("engine", cfg["ENGINE"]["name"])
 
+# logger
+logger = SummaryWriter(log_dir=args.log_dir)
 
 for epoch in range(cfg["ENGINE"]["epoch"]):
     # epoch_loss = engine_func(model, dataloader, optimizer, rank, epoch, cfg)
-    epoch_loss = engine_func(model, dataloader, optimizer, cfg)
+    epoch_loss = engine_func(model, dataloader, optimizer, cfg, epoch, logger)
     # if rank == 0 and (epoch + 1) % 50 == 0:
     if (epoch + 1) % 50 == 0:
         state_dict = model.module.state_dict()
-        save_checkpoint(args.logdir, state_dict, name="latest.pt")
+        save_checkpoint(args.logdir, state_dict, name=f"epoch_{epoch:04}.pt")
+    print(f"Epoch [{epoch}/{cfg['ENGINE']['epoch']-1}], Loss: {epoch_loss:.4f}")
+
 # print(f"From Rank: {rank}, ==> Training finished!")
 print(f"From Rank: {0}, ==> Training finished!")
