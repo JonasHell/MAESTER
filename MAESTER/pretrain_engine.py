@@ -76,7 +76,7 @@ def my_train_one_epoch(
         optimizer.step()
         epoch_loss += batch_loss.item()
         # log
-        if step % 1000 == 0:
+        if step % 100 == 0:
             print(f"Step [{step}], Loss: {batch_loss.item():.4f}")
             epoch_1000x = int((i / len(data_loader) + epoch) * 1000)
             # log images
