@@ -88,7 +88,7 @@ for epoch in range(cfg["ENGINE"]["epoch"]):
     epoch_loss = engine_func(model, dataloader, optimizer, cfg, epoch, logger)
     # if rank == 0 and (epoch + 1) % 50 == 0:
     if (epoch + 1) % 50 == 0:
-        state_dict = model.module.state_dict()
+        state_dict = model.state_dict()
         save_checkpoint(args.logdir, state_dict, name=f"epoch_{epoch:04}.pt")
     print(f"Epoch [{epoch}/{cfg['ENGINE']['epoch']-1}], Loss: {epoch_loss:.4f}")
 
