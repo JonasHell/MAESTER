@@ -1,3 +1,5 @@
+*.pt
+MAESTER/logs
 .vscode
 
 # Byte-compiled / optimized / DLL files
