@@ -182,3 +182,4 @@ class MyBetaSegDataset2D(BetaSegDataset2D):
             y_sample : y_sample + self.vol_size,
         ].unsqueeze(0)
         sample = sample.squeeze(0)
+        return self.aug(sample)
