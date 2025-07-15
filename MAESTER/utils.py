@@ -52,6 +52,7 @@ def read_yaml(path) -> Dict:
 
 
 def save_checkpoint(path, state_dict, name):
+    os.makedirs(path, exist_ok=True)
     filename = os.path.join(path, name)
     torch.save(state_dict, filename)
     print("Saving checkpoint:", filename)
