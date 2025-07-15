@@ -1,11 +1,12 @@
 import random
-import torch.utils.data.dataset
+
 import torch.nn.functional as F
+import torch.utils.data.dataset
 from monai.transforms import Compose, RandFlip, RandSpatialCrop, Resize
-from utils import register_plugin, get_plugin
+from utils import get_plugin, register_plugin
 
 
-@register_plugin('transform', 'betaaug2D')
+@register_plugin("transform", "betaaug2D")
 def betaaug(cfg):
     """
     A data augmentation function that crops, resizes and flips a 2D image randomly.
@@ -22,14 +23,28 @@ def betaaug(cfg):
     # Extract the minimum size and volume size from the configuration dictionary.
     min_size = int(cfg["vol_size"] * 0.5)
     volume_size = cfg["vol_size"]
-    
+
     # Define a Compose object that applies the following transformations to a 3D volume.
     compose = Compose(
-        [RandSpatialCrop(roi_size=(min_size, min_size,)),
-         Resize((volume_size, volume_size,), mode="bilinear",
-                align_corners=False),
-         RandFlip(prob=.5), ])
-    
+        [
+            RandSpatialCrop(
+                roi_size=(
+                    min_size,
+                    min_size,
+                )
+            ),
+            Resize(
+                (
+                    volume_size,
+                    volume_size,
+                ),
+                mode="bilinear",
+                align_corners=False,
+            ),
+            RandFlip(prob=0.5),
+        ]
+    )
+
     # Return the Compose object.
     return compose
 
@@ -59,13 +74,13 @@ class BetaSegDataset2D(torch.utils.data.dataset.Dataset):
 
     def __init__(self, cfg):
         self.path_list = cfg["path_list"]
-        self.pad = cfg["pad"] 
+        self.pad = cfg["pad"]
         self.aug = get_plugin("transform", cfg["aug"])(cfg)
         self.vol_size = (
             cfg["vol_size"] + int(cfg["vol_size"] // cfg["patch_size"])
             if cfg["patch_size"] % 2 == 0
             else cfg["vol_size"]
-        ) 
+        )
         self.key_name_dict = {
             x: x.split("/")[-1].split("_tensor")[0] for x in self.path_list
         }
@@ -86,9 +101,9 @@ class BetaSegDataset2D(torch.utils.data.dataset.Dataset):
         Returns:
             A tensor representing a randomly sampled 2D slice from the input data.
         """
-        curr_data_idx = random.randrange(0, len(self.data_list)) # select dataset
-        axis = random.randrange(0, 3) # select axis
-        return self.sample_cord(curr_data_idx, axis) # return 2D slice
+        curr_data_idx = random.randrange(0, len(self.data_list))  # select dataset
+        axis = random.randrange(0, 3)  # select axis
+        return self.sample_cord(curr_data_idx, axis)  # return 2D slice
 
     def sample_cord(self, data_idx, axis):
         """
@@ -101,7 +116,7 @@ class BetaSegDataset2D(torch.utils.data.dataset.Dataset):
         Returns:
             A tensor representing a 2D slice sampled from the input data at the given index and axis.
         """
-        data = self.data_list[data_idx] # get dataset
+        data = self.data_list[data_idx]  # get dataset
         _, d_z, d_x, d_y = data.shape
         if axis < 1:
             # z axis

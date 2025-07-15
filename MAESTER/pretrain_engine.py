@@ -1,9 +1,9 @@
 import random
-from typing import Iterable
 import time
+from typing import Iterable
+
 import numpy as np
 import torch
-
 from utils import register_plugin
 
 
@@ -37,7 +37,7 @@ def train_one_epoch(
     model.train()
     for batch_data in data_loader:
         optimizer.zero_grad()
-        batch_data = batch_data.cuda()
+        # batch_data = batch_data.cuda()
         batch_loss, _, _ = model(batch_data, mask_ratio=cfg["MODEL"]["mask_ratio"])
         batch_loss.backward()
         optimizer.step()
