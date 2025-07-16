@@ -187,6 +187,12 @@ class MyBetaSegDataset2D(torch.utils.data.dataset.Dataset):
             for x in self.path_list
         ]
 
+    def __len__(self):
+        """
+        Returns the number of samples in each epoch.
+        """
+        return 20000
+
     def __getitem__(self, idx):
         """
         Returns a randomly sampled 2D slice from the input data at the given index.
