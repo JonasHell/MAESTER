@@ -168,7 +168,7 @@ class BetaSegDataset2D(torch.utils.data.dataset.Dataset):
 
 
 @register_plugin("dataset", "MyBetaSegDataset2D")
-class MyBetaSegDataset2D(BetaSegDataset2D):
+class MyBetaSegDataset2D(torch.utils.data.dataset.Dataset):
     def __init__(self, cfg):
         self.path_list = cfg["path_list"]
         self.pad = cfg["pad"]
@@ -187,17 +187,20 @@ class MyBetaSegDataset2D(BetaSegDataset2D):
             for x in self.path_list
         ]
 
-    def sample_cord(self, data_idx, axis):
+    def __getitem__(self, idx):
+        """
+        Returns a randomly sampled 2D slice from the input data at the given index.
+        Returns:
+            A tensor representing a randomly sampled 2D slice from the input data.
+        """
+        curr_data_idx = random.randrange(0, len(self.data_list))  # select dataset
+        return self.sample_cord(curr_data_idx)  # return 2D slice
+
+    def sample_cord(self, data_idx):
         data = self.data_list[data_idx]  # get dataset
-        _, d_z, d_x, d_y = data.shape
+        _, d_z, _, _ = data.shape
         # z axis
-        x_sample = torch.randint(low=0, high=int(d_x - self.vol_size - 1), size=(1,))
-        y_sample = torch.randint(low=0, high=int(d_y - self.vol_size - 1), size=(1,))
         z_sample = torch.randint(low=0, high=int(d_z), size=(1,))
-        sample = data[0][
-            z_sample,
-            x_sample : x_sample + self.vol_size,
-            y_sample : y_sample + self.vol_size,
-        ].unsqueeze(0)
+        sample = data[0][z_sample, : self.vol_size, : self.vol_size].unsqueeze(0)
         sample = sample.squeeze(0)
         return self.aug(sample)
