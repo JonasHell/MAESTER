@@ -173,11 +173,12 @@ class MyBetaSegDataset2D(BetaSegDataset2D):
         self.path_list = cfg["path_list"]
         self.pad = cfg["pad"]
         self.aug = get_plugin("transform", cfg["aug"])(cfg)
-        self.vol_size = (
-            cfg["vol_size"] + int(cfg["vol_size"] // cfg["patch_size"])
-            if cfg["patch_size"] % 2 == 0
-            else cfg["vol_size"]
-        )
+        # self.vol_size = (
+        #     cfg["vol_size"] + int(cfg["vol_size"] // cfg["patch_size"])
+        #     if cfg["patch_size"] % 2 == 0
+        #     else cfg["vol_size"]
+        # )
+        self.vol_size = cfg["vol_size"]
         self.key_name_dict = {
             x: x.split("/")[-1].split("_tensor")[0] for x in self.path_list
         }
