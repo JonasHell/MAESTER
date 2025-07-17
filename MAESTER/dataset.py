@@ -49,6 +49,12 @@ def betaaug(cfg):
     return compose
 
 
+@register_plugin("transform", "mybetaaug2D")
+def mybetaaug(cfg):
+    compose = RandFlip(prob=0.5)
+    return compose
+
+
 @register_plugin("dataset", "BetaSegDataset2D")
 class BetaSegDataset2D(torch.utils.data.dataset.Dataset):
     """

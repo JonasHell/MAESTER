@@ -19,7 +19,7 @@ DATASET:
     # - "/mnt/embl/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_224down_single"
     - "/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_224down_single"
   pad: 0 # 4
-  aug: "betaaug2D"
+  aug: "mybetaaug2D"
   num_workers: 8
   batch_size: 32
   vol_size: 224  # 80
