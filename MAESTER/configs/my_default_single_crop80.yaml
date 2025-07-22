@@ -1,0 +1,33 @@
+MODEL:
+  name: "MAESTER"
+  img_size: 80
+  patch_size: 5
+  embed: 192
+  embed_dim: 192
+  depth: 14
+  num_heads: 1
+  decoder_embed_dim: 128
+  decoder_depth: 7
+  decoder_num_heads: 8
+  mlp_ratio: 2.0
+  mask_ratio: 0.5
+  pos_encode_w: 0.08
+  central_patch: 4
+DATASET:
+  name: "MyBetaSegDataset2D"
+  path_list:
+    # - "/mnt/embl/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_800_single_crop80"
+    - "/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_800_single_crop80"
+  pad: 0 # 4
+  aug: "mybetaaug2D"
+  num_workers: 8
+  batch_size: 32
+  vol_size: 80
+  patch_size: 5
+ENGINE:
+  name: "my_train_engine"
+  epoch: 2800
+OPTIM:
+  name: "adamw"
+  lr: 1.5e-4
+  reg_w: 1.0e-5
