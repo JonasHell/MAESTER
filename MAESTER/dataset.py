@@ -197,7 +197,7 @@ class MyBetaSegDataset2D(torch.utils.data.dataset.Dataset):
         """
         Returns the number of samples in each epoch.
         """
-        return 128
+        return 178
 
     def __getitem__(self, idx):
         """
