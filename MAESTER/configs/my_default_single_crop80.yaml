@@ -16,8 +16,8 @@ MODEL:
 DATASET:
   name: "MyBetaSegDataset2D"
   path_list:
-    # - "/mnt/embl/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_800_single_crop80"
-    - "/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_800_single_crop80"
+    # - "/mnt/embl/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_single_crop80"
+    - "/scratch/hellgoth/data/chlamy_MAESTER/240229_cw15-wtnew-wtold_interphase_nhs-tub-cetn-dna_cf_00_tensor_single_crop80"
   pad: 0 # 4
   aug: "mybetaaug2D"
   num_workers: 8
