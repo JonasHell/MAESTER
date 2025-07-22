@@ -76,6 +76,7 @@ def my_train_one_epoch(
         optimizer.step()
         epoch_loss += batch_loss.item()
         # log
+        logger.add_scalar("train_loss", batch_loss.item(), step)
         if step % 100 == 0:
             print(f"Step [{step}], Loss: {batch_loss.item():.4f}")
             epoch_1000x = int((i / len(data_loader) + epoch) * 1000)
